@@ -39,14 +39,14 @@ async function loadData(category, pagename, comics_name, vol, issue) {
     let mdPath
     if (vol) {
         if (issue) {
-            mdPath = `/articles/comics/${comics_name}/${comics_name} Том ${vol} ${issue}.md`
+            mdPath = `./articles/comics/${comics_name}/${comics_name} Том ${vol} ${issue}.md`
         } else {
-            mdPath = `/articles/comics/${comics_name}/${comics_name} Том ${vol}.md`
+            mdPath = `./articles/comics/${comics_name}/${comics_name} Том ${vol}.md`
         }
-        jsonPath = `/articles/comics/${comics_name}/${comics_name} Том ${vol}.json`
+        jsonPath = `./articles/comics/${comics_name}/${comics_name} Том ${vol}.json`
     } else {
-        jsonPath = `/articles/${category}/${pagename}.json`
-        mdPath = `/articles/${category}/${pagename}.md`
+        jsonPath = `./articles/${category}/${pagename}.json`
+        mdPath = `./articles/${category}/${pagename}.md`
     }
     
     const [jsonData, markdownContent] = await Promise.all([
