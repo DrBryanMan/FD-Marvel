@@ -4,14 +4,11 @@ import * as Template from './templates.js'
 
 const router = new Navigo('/', { hash: true })
 
-document.addEventListener('DOMContentLoaded', async () => {
 router
     .on('/articles/characters/:character', ({ data }) => {
-        // console.log(data.character)
         renderPage('characters', data.character)
     })
     .on('/articles/comics/:comics', ({ data }) => {
-        // pagename = data.comics
         const comics_name = data.comics.split(' Том')[0] // Дивовижна Людина-павук
         let vol = data.comics.split('Том ')[1] // 1_1 або 1
         let issue
@@ -23,9 +20,6 @@ router
             renderPageData('comics', data.comics, comics_name, vol)
         }
     })
-    // .on('/articles/comics/:issue', ({ data }) => {
-    //     renderPage(`comics`, data.issue)
-    // })
     .resolve()
 
 async function loadFile(path) {
@@ -44,7 +38,6 @@ async function loadData(category, pagename, comics_name, vol, issue) {
     let jsonPath
     let mdPath
     if (vol) {
-        // const trimtitle = pagename.substring(0, pagename.lastIndexOf(' '))
         if (issue) {
             mdPath = `/articles/comics/${comics_name}/${comics_name} Том ${vol} ${issue}.md`
         } else {
@@ -67,8 +60,6 @@ function creatPageHeader(pagename, comics_name, vol, issue) {
     const page = document.getElementById('page')
     const pageHeader = document.createElement('div')
     pageHeader.id = 'pageHeader'
-    // pageHeader.innerHTML = ''
-    // const series_num = pagename.substring(0, pagename.lastIndexOf(' '))
     pageHeader.innerHTML = `
         <div>Категорії: ${comics_name}</div>
         <h1>${pagename}</h1>
@@ -79,32 +70,25 @@ function creatPageHeader(pagename, comics_name, vol, issue) {
 }
 
 async function renderPageData(category, pagename, comics_name, vol, issue) {
-        let [ pageData, pageContent ] = await loadData(category, pagename, comics_name, vol, issue)
-        pageData = JSON.parse(pageData)
-        page.innerHTML = '<p>Завантаження...</p>'
+    console.log('comics_name:', comics_name)
+    let [ pageData, pageContent ] = await loadData(category, pagename, comics_name, vol, issue)
+    pageData = JSON.parse(pageData)
+    page.innerHTML = '<p>Завантаження...</p>'
 
-        if (pageContent) {
-            page.innerHTML = marked.parse(pageContent)
-        } else {
-            page.innerHTML = '<p>Інформація відсутня.</p>'
-        }
-        switch (category) {
-            case 'comics':
-                // renderComicsPage(pageData, pagename, comics_name, vol)
-                Template.Comics(pageData, pagename, comics_name, vol)
-                Template.ComicsList(pageData, pagename, comics_name, vol)
-                break
-                
-                case 'issue':
-                // renderIssuePage(pageData, pagename, comics_name, vol, issue)
-                Template.Issue(pageData, pagename, comics_name, vol, issue)
-                break
-        }
-        creatPageHeader(pagename, comics_name, vol, issue)
+    if (pageContent) {
+        page.innerHTML = marked.parse(pageContent)
+    } else {
+        page.innerHTML = '<p>Інформація відсутня.</p>'
     }
-})
-
-// function renderComicsPage(pageData, pagename, comics_name, vol) {
-// }
-// function renderIssuePage(pageData, pagename, comics_name, vol, issue) {
-// }
+    switch (category) {
+        case 'comics':
+            Template.Comics(pageData, pagename, comics_name, vol)
+            Template.ComicsList(pageData, pagename, comics_name, vol)
+            break
+            
+            case 'issue':
+            Template.Issue(pageData, pagename, comics_name, vol, issue)
+            break
+    }
+    creatPageHeader(pagename, comics_name, vol, issue)
+}
